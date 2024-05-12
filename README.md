@@ -25,7 +25,9 @@
 
 
 ### Mircosoft Office Open XML 
-- https://learn.microsoft.com/en-us/office/open-xml/open-xml-sdk
+- [OOXML(微软国际标准)](http://officeopenxml.com/)
+- [OpenDocument(ODF国际标准)](https://www.fsf.org/campaigns/opendocument/)
+- [微软open xml SDK](https://learn.microsoft.com/zh-cn/office/open-xml/about-the-open-xml-sdk)
 - [Mircosoft Office Open XML 格式和文件扩展名](https://support.microsoft.com/zh-cn/office/open-xml-%E6%A0%BC%E5%BC%8F%E5%92%8C%E6%96%87%E4%BB%B6%E6%89%A9%E5%B1%95%E5%90%8D-5200d93c-3449-4380-8e11-31ef14555b18)
 
 
