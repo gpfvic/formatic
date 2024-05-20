@@ -33,10 +33,10 @@ def setMargin(docx):
     section = docx.sections[0]
     section.page_height = Cm(29.7)
     section.page_width = Cm(21.0)
-    section.left_margin = Cm(2.8)
-    section.right_margin = Cm(2.6)
-    section.top_margin = Cm(3.7)
-    section.bottom_margin = Cm(3.5)
+    section.left_margin = Cm(2.9)
+    section.right_margin = Cm(2.9)
+    section.top_margin = Cm(3.0)
+    section.bottom_margin = Cm(3.0)
 
 
 # 判断是否为一级标题格式（如：一、xxx）
@@ -132,15 +132,15 @@ for paragraph in doc.paragraphs:
     paragraph.paragraph_format.element.pPr.ind.set(qn("w:right"), "0")
     print("这是第%s段" % paragraphcnt)
     print(paragraph.text)
+
     if paragraphcnt == 1 and len(paragraph.text) < 40:
-        # 处理头部空行
         # 标题（方正小标宋_GBK、2号、加粗、居中、下端按2号字空一行）
-        paragraph.paragraph_format.line_spacing = Pt(28)  # 行距固定值28磅
+        paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值28磅
         paragraph.paragraph_format.space_after = Pt(0)  # 段后间距=0
         for run in paragraph.runs:
             run.font.size = Pt(22)  # 字体大小2号
             run.bold = False  # 加粗
-            run.font.name = "方正小标宋_GBK"  # 控制是西文时的字体
+            run.font.name = "Times New Roman"  # 控制是西文时的字体
             run.element.rPr.rFonts.set(
                 qn("w:eastAsia"), "方正小标宋_GBK"
             )  # 控制是中文时的字体
@@ -148,14 +148,14 @@ for paragraph in doc.paragraphs:
         continue
     elif paragraphcnt == 2 and len(paragraph.text) < 30:
         # 作者单位、姓名
-        paragraph.paragraph_format.line_spacing = Pt(28)  # 行距固定值28磅
+        paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值28磅
         paragraph.paragraph_format.space_after = Pt(0)  # 段后间距=0
         for run in paragraph.runs:
             run.font.size = Pt(16)  # 字体大小2号
             run.bold = False  # 加粗
-            run.font.name = "楷体"  # 控制是西文时的字体
+            run.font.name = "Times New Roman"  # 控制是西文时的字体
             run.element.rPr.rFonts.set(
-                qn("w:eastAsia"), "楷体"
+                qn("w:eastAsia"), "方正楷体_GBK"
             )  # 控制是中文时的字体
             paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # 居中
         continue
@@ -171,9 +171,9 @@ for paragraph in doc.paragraphs:
         for run in paragraph.runs:
             run.font.size = Pt(16)  # 字体大小2号
             run.bold = False  # 加粗
-            run.font.name = "楷体"  # 控制是西文时的字体
+            run.font.name = "Times New Roman"  # 控制是西文时的字体
             run.element.rPr.rFonts.set(
-                qn("w:eastAsia"), "楷体"
+                qn("w:eastAsia"), "方正楷体_GBK"
             )  # 控制是中文时的字体
             paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # 居中
         continue
@@ -185,23 +185,23 @@ for paragraph in doc.paragraphs:
         for run in paragraph.runs:
             run.font.size = Pt(16)  # 字体大小3号
             run.bold = False  # 字体不加粗
-            run.font.name = "仿宋_GB2312"
-            run.element.rPr.rFonts.set(qn("w:eastAsia"), "仿宋_GB2312")
+            run.font.name = "Times New Roman"
+            run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正仿宋_GBK")
             if GradeOneTitle(
                 run.text
             ):  # 判断是否为一级标题格式（如：一、xxx）
-                run.font.name = "黑体"
-                run.element.rPr.rFonts.set(qn("w:eastAsia"), "黑体")
+                run.font.name = "Times New Roman"
+                run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正黑体_GBK")
             elif GradeTwoTitle(
                 run.text
             ):  # 判断是否为二级标题格式（如：（一）xxx）
                 if "。" not in run.text:
-                    run.font.name = "楷体"
-                    run.element.rPr.rFonts.set(qn("w:eastAsia"), "楷体")
+                    run.font.name = "Times New Roman"
+                    run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正楷体_GBK")
                 else:
                     run.text = run.text.split("。", 1)
-                    run.font.name = "楷体"
-                    run.element.rPr.rFonts.set(qn("w:eastAsia"), "楷体")
+                    run.font.name = "Times New Roman"
+                    run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正楷体_GBK")
             elif GradeThreeTitle(
                 run.text
             ):  # 判断是否为三级标题格式（如：1.xxx）
@@ -214,9 +214,9 @@ for paragraph in doc.paragraphs:
                         and (run.text[2] in punc)
                     ):
                         run.text = run.text.replace(run.text[2], "．", 1)
-                    run.font.name = "仿宋_GB2312"
+                    run.font.name = "Times New Roman"
                     run.element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     run.bold = True  # 字体加粗
                 else:
@@ -237,8 +237,8 @@ for paragraph in doc.paragraphs:
                     doc.paragraphs[
                         paragraphcnt - 1
                     ].paragraph_format.line_spacing = Pt(
-                        28
-                    )  # 行距固定值28磅
+                        29
+                    )  # 行距固定值29磅
                     doc.paragraphs[
                         paragraphcnt - 1
                     ].paragraph_format.space_after = Pt(
@@ -246,14 +246,14 @@ for paragraph in doc.paragraphs:
                     )  # 段后间距=0
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
-                    ].font.name = "仿宋_GB2312"
+                    ].font.name = "Times New Roman"
                     doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
                         Pt(16)
                     )  # 字体大小3号
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
                     ].element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
@@ -263,23 +263,23 @@ for paragraph in doc.paragraphs:
                     ).bold = False
                     doc.paragraphs[paragraphcnt - 1].runs[
                         1
-                    ].font.name = "仿宋_GB2312"
+                    ].font.name = "Times New Roman"
                     doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
                         Pt(16)
                     )  # 字体大小3号
                     doc.paragraphs[paragraphcnt - 1].runs[
                         1
                     ].element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     delete_paragraph(paragraph)
             elif GradeFourTitle(
                 run.text
             ):  # 判断是否为四级标题格式（如：（1）xxx）
                 if "。" not in run.text:
-                    run.font.name = "仿宋_GB2312"
+                    run.font.name = "Times New Roman"
                     run.element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     run.bold = True  # 字体加粗
                 else:
@@ -292,8 +292,8 @@ for paragraph in doc.paragraphs:
                     doc.paragraphs[
                         paragraphcnt - 1
                     ].paragraph_format.line_spacing = Pt(
-                        28
-                    )  # 行距固定值28磅
+                        29
+                    )  # 行距固定值29磅
                     doc.paragraphs[
                         paragraphcnt - 1
                     ].paragraph_format.space_after = Pt(
@@ -301,14 +301,14 @@ for paragraph in doc.paragraphs:
                     )  # 段后间距=0
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
-                    ].font.name = "仿宋_GB2312"
+                    ].font.name = "Times New Roman"
                     doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
                         Pt(16)
                     )  # 字体大小3号
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
                     ].element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
@@ -318,23 +318,23 @@ for paragraph in doc.paragraphs:
                     ).bold = False
                     doc.paragraphs[paragraphcnt - 1].runs[
                         1
-                    ].font.name = "仿宋_GB2312"
+                    ].font.name = "Times New Roman"
                     doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
                         Pt(16)
                     )  # 字体大小3号
                     doc.paragraphs[paragraphcnt - 1].runs[
                         1
                     ].element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     delete_paragraph(paragraph)
             elif GradeFiveTitle(
                 run.text
             ):  # 判断是否为五级标题格式（如：一是xxx）
                 if "。" not in run.text:
-                    run.font.name = "仿宋_GB2312"
+                    run.font.name = "Times New Roman"
                     run.element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     run.bold = True  # 字体加粗
                 else:
@@ -347,8 +347,8 @@ for paragraph in doc.paragraphs:
                     doc.paragraphs[
                         paragraphcnt - 1
                     ].paragraph_format.line_spacing = Pt(
-                        28
-                    )  # 行距固定值28磅
+                        29
+                    )  # 行距固定值29磅
                     doc.paragraphs[
                         paragraphcnt - 1
                     ].paragraph_format.space_after = Pt(
@@ -356,14 +356,14 @@ for paragraph in doc.paragraphs:
                     )  # 段后间距=0
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
-                    ].font.name = "仿宋_GB2312"
+                    ].font.name = "Times New Roman"
                     doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
                         Pt(16)
                     )  # 字体大小3号
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
                     ].element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     doc.paragraphs[paragraphcnt - 1].runs[
                         0
@@ -373,19 +373,19 @@ for paragraph in doc.paragraphs:
                     ).bold = False
                     doc.paragraphs[paragraphcnt - 1].runs[
                         1
-                    ].font.name = "仿宋_GB2312"
+                    ].font.name = "Times New Roman"
                     doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
                         Pt(16)
                     )  # 字体大小3号
                     doc.paragraphs[paragraphcnt - 1].runs[
                         1
                     ].element.rPr.rFonts.set(
-                        qn("w:eastAsia"), "仿宋_GB2312"
+                        qn("w:eastAsia"), "方正仿宋_GBK"
                     )
                     delete_paragraph(paragraph)
             elif LuoKuan(run.text):  # 判断是否为落款格式
-                run.font.name = "仿宋_GB2312"
-                run.element.rPr.rFonts.set(qn("w:eastAsia"), "仿宋_GB2312")
+                run.font.name = "Times New Roman"
+                run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正仿宋_GBK")
                 run.text = (
                     "\r" * 2 + run.text
                 )  # 前置空格，顶到最右，需手动调整空格
@@ -393,8 +393,25 @@ for paragraph in doc.paragraphs:
                     288
                 )  # 18B*16Pt=288Pt
             else:  # 普通正文格式
-                run.font.name = "仿宋_GB2312"
-                run.element.rPr.rFonts.set(qn("w:eastAsia"), "仿宋_GB2312")
+                run.font.name = "Times New Roman"
+                run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正仿宋_GBK")
+
+paragraphcnt = 0
+for paragraph in doc.paragraphs:
+    paragraphcnt = paragraphcnt + 1
+    if paragraphcnt == 1 and len(paragraph.text) < 40:
+        run = paragraph.add_run('\n')
+        run.font.size = Pt(16)
+        run.font.name = "方正楷体_GBK"
+        continue
+    elif paragraphcnt == 2 and len(paragraph.text) < 30:
+        continue
+    elif paragraphcnt == 3:
+        run = paragraph.add_run('\n')
+        run.font.size = Pt(16)
+        run.font.name = "方正楷体_GBK"
+        continue
+
 setMargin(doc)
 
 # 保存格式化的文档
