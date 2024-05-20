@@ -36,3 +36,9 @@
 - https://python-docx.readthedocs.io/en/latest/user/styles-using.html
 
 
+### nuitka打包onefile exe
+```
+nuitka --standalone --onefile --windows-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --enable-plugin=pyqt5 --follow-import-to=need --output-dir=output app.py
+```
+- [nuitka中文指南](https://nuitka-cn.com/)
+
