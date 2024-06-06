@@ -3,6 +3,9 @@ from docx.oxml.ns import qn
 from docx.shared import Pt, Cm
 from docx.enum.text import *
 from docx import Document
+from docx.text.paragraph import Paragraph
+from docx.parts.image import ImagePart
+
 
 
 ## 总逻辑
@@ -90,7 +93,7 @@ def GradeFiveTitle(str):
         return True
     else:
         return False
-
+    
 
 # parameters
 cn_num = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"]
@@ -104,6 +107,12 @@ def sytle_normalization(filename):
     paragraphcnt = 0
     for paragraph in doc.paragraphs:
         paragraphcnt = paragraphcnt + 1
+
+        # 如果该段包含图片，不做任何处理，保持原样
+        if any("pic:pic" in run.element.xml for run in paragraph.runs):
+            continue
+        
+        # 段落处理
         paragraph.text = paragraph.text.replace(",", "，")
         paragraph.text = paragraph.text.replace(";", "；")
         paragraph.text = paragraph.text.replace(":", "：")
@@ -131,6 +140,7 @@ def sytle_normalization(filename):
         paragraph.paragraph_format.element.pPr.ind.set(qn("w:right"), "0")
         print("这是第%s段" % paragraphcnt)
         print(paragraph.text)
+
 
         if paragraphcnt == 1 and len(paragraph.text) < 40:
             # 标题（方正小标宋_GBK、2号、加粗、居中、下端按2号字空一行）

@@ -38,7 +38,7 @@
 
 ### nuitka打包onefile exe
 ```
-nuitka --standalone --onefile --windows-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --enable-plugin=pyqt5 --follow-import-to=need --output-dir=output app.py
+nuitka --standalone --onefile --windows-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --enable-plugin=pyqt5 --follow-import-to=need --windows-icon-from-ico=resource/ico.png --windows-product-name=WordFormatAI    --windows-company-name=YZBigData --windows-product-version=1.0.0.0 --output-dir=output WordAI.py
 ```
 - [nuitka中文指南](https://nuitka-cn.com/)
 
