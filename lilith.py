@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os,subprocess
 from docx.oxml.ns import qn
 from docx.shared import Pt, Cm
@@ -144,7 +146,7 @@ def sytle_normalization(filename):
 
         if paragraphcnt == 1 and len(paragraph.text) < 40:
             # 标题（方正小标宋_GBK、2号、加粗、居中、下端按2号字空一行）
-            paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值28磅
+            paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值29磅
             paragraph.paragraph_format.space_after = Pt(0)  # 段后间距=0
             for run in paragraph.runs:
                 run.font.size = Pt(22)  # 字体大小2号
@@ -157,10 +159,10 @@ def sytle_normalization(filename):
             continue
         elif paragraphcnt == 2 and len(paragraph.text) < 30:
             # 作者单位、姓名
-            paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值28磅
+            paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值29磅
             paragraph.paragraph_format.space_after = Pt(0)  # 段后间距=0
             for run in paragraph.runs:
-                run.font.size = Pt(16)  # 字体大小2号
+                run.font.size = Pt(16)  # 字体大小3号
                 run.bold = False  # 加粗
                 run.font.name = "Times New Roman"  # 控制是西文时的字体
                 run.element.rPr.rFonts.set(
@@ -175,10 +177,10 @@ def sytle_normalization(filename):
             and (paragraph.text[1] in num)
         ):
             # 日期，如（2023年6月15日）
-            paragraph.paragraph_format.line_spacing = Pt(28)  # 行距固定值28磅
+            paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值29磅
             paragraph.paragraph_format.space_after = Pt(0)  # 段后间距=0
             for run in paragraph.runs:
-                run.font.size = Pt(16)  # 字体大小2号
+                run.font.size = Pt(16)  # 字体大小3号
                 run.bold = False  # 加粗
                 run.font.name = "Times New Roman"  # 控制是西文时的字体
                 run.element.rPr.rFonts.set(
@@ -188,7 +190,7 @@ def sytle_normalization(filename):
             continue
             # #处理正文
         else:
-            paragraph.paragraph_format.line_spacing = Pt(28)  # 行距固定值28磅
+            paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值29磅
             paragraph.paragraph_format.space_after = Pt(0)  # 段后间距=0
             paragraph.paragraph_format.first_line_indent = Pt(32)
             for run in paragraph.runs:
@@ -409,14 +411,14 @@ def sytle_normalization(filename):
     for paragraph in doc.paragraphs:
         paragraphcnt = paragraphcnt + 1
         if paragraphcnt == 1 and len(paragraph.text) < 40:
-            run = paragraph.add_run('\n')
+            # run = paragraph.add_run('\n') //空行
             run.font.size = Pt(16)
             run.font.name = "方正楷体_GBK"
             continue
         elif paragraphcnt == 2 and len(paragraph.text) < 30:
             continue
         elif paragraphcnt == 3:
-            run = paragraph.add_run('\n')
+            # run = paragraph.add_run('\n') //空行
             run.font.size = Pt(16)
             run.font.name = "方正楷体_GBK"
             continue

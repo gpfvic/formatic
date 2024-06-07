@@ -83,9 +83,9 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "扬州大数据集团"))
         self.label.setText(_translate("MainWindow", "扬州大数据集团"))
-        self.label_2.setText(_translate("MainWindow", "公文格式智能规范AI小助手"))
+        self.label_2.setText(_translate("MainWindow", "公文格式规范AI小助手v0.2"))
         self.selectBtn.setText(_translate("MainWindow", "选择word文件"))
         self.selectBtn.clicked.connect(self.onClickedSelectBtnSelectFileFromLocal)
         self.openBtn.setText(_translate("MainWindow", "打开生成文件位置"))
