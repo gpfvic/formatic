@@ -2,6 +2,7 @@
 
 import os,subprocess
 from docx.oxml.ns import qn
+from docx.oxml import OxmlElement, ns
 from docx.shared import Pt, Cm
 from docx.enum.text import *
 from docx import Document
@@ -24,10 +25,11 @@ def delete_paragraph(paragraph):
 # 判断是否为落款格式
 def LuoKuan(str):
     for i in str:
-        if i in punc:
+        if i in PUNC:
             return False
-    if ((str[0] in num) and (str[-1] == "日") and (len(str) <= 12)) or (
-        (str[0] in cn_num) and (str[-1] == "日") and (len(str) <= 12)
+    if ((str[0] in NUM) and (str[-1] == "日") and (len(str) <= 12)) or (
+        (str[0] in CN_NUM) and (str[-1] == "日") and (len(str) <= 12) or(
+         (str[-1] == "部") and (len(str) <= 12 ) )
     ):
         return True
     else:
@@ -46,8 +48,8 @@ def setMargin(docx):
 
 # 判断是否为一级标题格式（如：一、xxx）
 def GradeOneTitle(str):
-    if ((str[0] in cn_num) and (str[1] == "、")) or (
-        (str[0] in cn_num) and (str[1] in cn_num) and (str[2] == "、")
+    if ((str[0] in CN_NUM) and (str[1] == "、")) or (
+        (str[0] in CN_NUM) and (str[1] in CN_NUM) and (str[2] == "、")
     ):
         return True
     else:
@@ -56,10 +58,10 @@ def GradeOneTitle(str):
 
 # 判断是否为二级标题格式（如：（一）xxx）
 def GradeTwoTitle(str):
-    if ((str[0] == "（") and (str[1] in cn_num) and (str[2] == "）")) or (
+    if ((str[0] == "（") and (str[1] in CN_NUM) and (str[2] == "）")) or (
         (str[0] == "（")
-        and (str[1] in cn_num)
-        and (str[2] in cn_num)
+        and (str[1] in CN_NUM)
+        and (str[2] in CN_NUM)
         and (str[3] == "）")
     ):
         return True
@@ -69,8 +71,8 @@ def GradeTwoTitle(str):
 
 # 判断是否为三级标题格式（如：1.xxx）
 def GradeThreeTitle(str):
-    if ((str[0] in num) and (str[1] in punc)) or (
-        (str[0] in num) and (str[1] in num) and (str[2] in punc)
+    if ((str[0] in NUM) and (str[1] in PUNC)) or (
+        (str[0] in NUM) and (str[1] in NUM) and (str[2] in PUNC)
     ):
         return True
     else:
@@ -79,8 +81,8 @@ def GradeThreeTitle(str):
 
 # 判断是否为四级标题格式（如：（1）xxx）
 def GradeFourTitle(str):
-    if ((str[0] == "（") and (str[1] in num) and (str[2] == "）")) or (
-        (str[0] == "（") and (str[1] in num) and (str[2] in num) and (str[3] == "）")
+    if ((str[0] == "（") and (str[1] in NUM) and (str[2] == "）")) or (
+        (str[0] == "（") and (str[1] in NUM) and (str[2] in NUM) and (str[3] == "）")
     ):
         return True
     else:
@@ -89,19 +91,20 @@ def GradeFourTitle(str):
 
 # 判断是否为五级标题格式（如：一是XXX）
 def GradeFiveTitle(str):
-    if ((str[0] in cn_num) and (str[1] in must)) or (
-        (str[0] in cn_num) and (str[1] in cn_num) and (str[1] in must)
+    if ((str[0] in CN_NUM) and (str[1] in MUST)) or (
+        (str[0] in CN_NUM) and (str[1] in CN_NUM) and (str[1] in MUST)
     ):
         return True
     else:
         return False
     
+       
 
 # parameters
-cn_num = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"]
-num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-punc = ["。", "，", "！", "？", "：", "；", "、", ".", "（", "）", "．"]
-must = ["要", "是", "能"]
+CN_NUM = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"]
+NUM = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+PUNC = ["。", "，", "！", "？", "：", "；", "、", ".", "（", "）", "．"]
+MUST = ["要", "是", "能"]
 
 def sytle_normalization(filename):
     doc = Document(filename)
@@ -174,7 +177,7 @@ def sytle_normalization(filename):
             paragraphcnt == 3
             and len(paragraph.text) < 30
             and (paragraph.text[0] == "（")
-            and (paragraph.text[1] in num)
+            and (paragraph.text[1] in NUM)
         ):
             # 日期，如（2023年6月15日）
             paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值29磅
@@ -188,7 +191,7 @@ def sytle_normalization(filename):
                 )  # 控制是中文时的字体
                 paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # 居中
             continue
-            # #处理正文
+        # # 处理正文，从第四段开始
         else:
             paragraph.paragraph_format.line_spacing = Pt(29)  # 行距固定值29磅
             paragraph.paragraph_format.space_after = Pt(0)  # 段后间距=0
@@ -206,23 +209,76 @@ def sytle_normalization(filename):
                 elif GradeTwoTitle(
                     run.text
                 ):  # 判断是否为二级标题格式（如：（一）xxx）
-                    if "。" not in run.text:
+                    if "。" not in run.text and "：" not in run.text:
                         run.font.name = "Times New Roman"
                         run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正楷体_GBK")
                     else:
-                        run.text = run.text.split("。", 1)
-                        run.font.name = "Times New Roman"
-                        run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正楷体_GBK")
+                        if "：" in run.text and "。" in run.text:
+                            if run.text.index("：") < run.text.index("。"):
+                                sentence_to_bold = run.text.split("：")[0] + "："
+                                sentence_not_to_bold = run.text.split("：", 1)[1]
+                        elif "：" in run.text and "。" not in run.text:
+                            sentence_to_bold = run.text.split("：")[0] + "："
+                            sentence_not_to_bold = run.text.split("：")[1]
+                        elif "。" in run.text:
+                            sentence_to_bold = run.text.split("。")[0] + "。"
+                            sentence_not_to_bold = run.text.split("。")[1]
+                        else:
+                            continue                            
+                        paragraph.insert_paragraph_before(sentence_to_bold)
+                        doc.paragraphs[
+                            paragraphcnt - 1
+                        ].paragraph_format.first_line_indent = Pt(32)
+                        doc.paragraphs[
+                            paragraphcnt - 1
+                        ].paragraph_format.line_spacing = Pt(
+                            29
+                        )  # 行距固定值29磅
+                        doc.paragraphs[
+                            paragraphcnt - 1
+                        ].paragraph_format.space_after = Pt(
+                            0
+                        )  # 段后间距=0
+                        doc.paragraphs[paragraphcnt - 1].runs[
+                            0
+                        ].font.name = "Times New Roman"
+                        doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
+                            Pt(16)
+                        )  # 字体大小3号
+                        doc.paragraphs[paragraphcnt - 1].runs[
+                            0
+                        ].element.rPr.rFonts.set(
+                            qn("w:eastAsia"), "方正仿宋_GBK"
+                        )
+                        doc.paragraphs[paragraphcnt - 1].runs[
+                            0
+                        ].bold = True  # 字体加粗
+                        doc.paragraphs[paragraphcnt - 1].add_run(
+                            sentence_not_to_bold
+                        ).bold = False
+                        doc.paragraphs[paragraphcnt - 1].runs[
+                            1
+                        ].font.name = "Times New Roman"
+                        doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
+                            Pt(16)
+                        )  # 字体大小3号
+                        doc.paragraphs[paragraphcnt - 1].runs[
+                            1
+                        ].element.rPr.rFonts.set(
+                            qn("w:eastAsia"), "方正仿宋_GBK"
+                        )
+                        delete_paragraph(paragraph)
+                        
                 elif GradeThreeTitle(
                     run.text
                 ):  # 判断是否为三级标题格式（如：1.xxx）
                     if "。" not in run.text:
-                        if (run.text[0] in num) and (run.text[1] in punc):
+                        if (run.text[0] in NUM) and (run.text[1] in PUNC):
                             run.text = run.text.replace(run.text[1], "．", 1)
                         if (
-                            (run.text[0] in num)
-                            and (run.text[1] in num)
-                            and (run.text[2] in punc)
+                            (run.text[0] in NUM)
+                            and (run.text[1] in NUM)
+                            and (run.text[2] in PUNC)
                         ):
                             run.text = run.text.replace(run.text[2], "．", 1)
                         run.font.name = "Times New Roman"
@@ -231,12 +287,12 @@ def sytle_normalization(filename):
                         )
                         run.bold = True  # 字体加粗
                     else:
-                        if (run.text[0] in num) and (run.text[1] in punc):
+                        if (run.text[0] in NUM) and (run.text[1] in PUNC):
                             run.text = run.text.replace(run.text[1], "．", 1)
                         if (
-                            (run.text[0] in num)
-                            and (run.text[1] in num)
-                            and (run.text[2] in punc)
+                            (run.text[0] in NUM)
+                            and (run.text[1] in NUM)
+                            and (run.text[2] in PUNC)
                         ):
                             run.text = run.text.replace(run.text[2], "．", 1)
                         sentence_to_bold = run.text.split("。")[0] + "。"
@@ -411,7 +467,7 @@ def sytle_normalization(filename):
     for paragraph in doc.paragraphs:
         paragraphcnt = paragraphcnt + 1
         if paragraphcnt == 1 and len(paragraph.text) < 40:
-            # run = paragraph.add_run('\n') //空行
+            run = paragraph.add_run('\n') #空行
             run.font.size = Pt(16)
             run.font.name = "方正楷体_GBK"
             continue
@@ -428,12 +484,61 @@ def sytle_normalization(filename):
 
 
 
+def create_element(name):
+    return OxmlElement(name)
+
+def create_attribute(element, name, value):
+    element.set(ns.qn(name), value)
+
+
+def add_page_number(paragraph):
+
+    pre_run = paragraph.add_run()
+    t2 = create_element('w:t')
+    create_attribute(t2, 'xml:space', 'preserve')
+    t2.text = "- "
+    pre_run._r.append(t2)
+    pre_run.font.size = Pt(12)
+    pre_run.font.name = "宋体"
+
+    page_num_run = paragraph.add_run()
+    fldChar1 = create_element('w:fldChar')
+    create_attribute(fldChar1, 'w:fldCharType', 'begin')
+
+    instrText = create_element('w:instrText')
+    create_attribute(instrText, 'xml:space', 'preserve')
+    instrText.text = "PAGE"
+
+    fldChar2 = create_element('w:fldChar')
+    create_attribute(fldChar2, 'w:fldCharType', 'end')
+
+    page_num_run._r.append(fldChar1)
+    page_num_run._r.append(instrText)
+    page_num_run._r.append(fldChar2)
+
+    page_num_run.font.size = Pt(12)
+    page_num_run.font.name = "宋体"
+
+    post_run = paragraph.add_run()
+    t3 = create_element('w:t')
+    create_attribute(t3, 'xml:space', 'preserve')
+    t3.text = " -"
+    post_run._r.append(t3)
+    post_run.font.size = Pt(12)
+    post_run.font.name = "宋体"
+    return
+
+
 if __name__=="__main__":
     # 测试文档，无格式
-    draft_doc = "draft.docx"
+    draft_doc = "扬州市数据资产登记指引（试行）_0614V3(1).docx"
+    # draft_doc = "draft.docx"
     doc = sytle_normalization(draft_doc)
     # 保存格式化的文档
     fname = 'formatted.docx'
+    add_page_number(doc.sections[0].footer.paragraphs[0])
+    doc.sections[0].footer.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
     doc.save(fname)
 
     # 打开格式化后的文档
