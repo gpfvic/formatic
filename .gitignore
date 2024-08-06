@@ -6,5 +6,7 @@ __pycache__/
 output/
 *.docx
 *.doc
+*.pdf
+*.jpg
 imgs/
 关于与苏交科成立合资公司的建议方案.doc

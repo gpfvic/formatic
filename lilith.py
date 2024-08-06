@@ -272,184 +272,126 @@ def sytle_normalization(filename):
                 elif GradeThreeTitle(
                     run.text
                 ):  # 判断是否为三级标题格式（如：1.xxx）
-                    if "。" not in run.text:
-                        if (run.text[0] in NUM) and (run.text[1] in PUNC):
-                            run.text = run.text.replace(run.text[1], "．", 1)
-                        if (
-                            (run.text[0] in NUM)
-                            and (run.text[1] in NUM)
-                            and (run.text[2] in PUNC)
-                        ):
-                            run.text = run.text.replace(run.text[2], "．", 1)
-                        run.font.name = "Times New Roman"
-                        run.element.rPr.rFonts.set(
+                    run.font.name = "Times New Roman"
+                    run.element.rPr.rFonts.set(
                             qn("w:eastAsia"), "方正仿宋_GBK"
                         )
+                    if "。" not in run.text and "；" not in run.text and len(run.text)<16:
                         run.bold = True  # 字体加粗
-                    else:
-                        if (run.text[0] in NUM) and (run.text[1] in PUNC):
-                            run.text = run.text.replace(run.text[1], "．", 1)
-                        if (
-                            (run.text[0] in NUM)
-                            and (run.text[1] in NUM)
-                            and (run.text[2] in PUNC)
-                        ):
-                            run.text = run.text.replace(run.text[2], "．", 1)
-                        sentence_to_bold = run.text.split("。")[0] + "。"
-                        sentence_not_to_bold = run.text.split("。", 1)[1]
-                        paragraph.insert_paragraph_before(sentence_to_bold)
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.first_line_indent = Pt(32)
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.line_spacing = Pt(
-                            29
-                        )  # 行距固定值29磅
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.space_after = Pt(
-                            0
-                        )  # 段后间距=0
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].font.name = "Times New Roman"
-                        doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
-                            Pt(16)
-                        )  # 字体大小3号
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].element.rPr.rFonts.set(
-                            qn("w:eastAsia"), "方正仿宋_GBK"
-                        )
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].bold = True  # 字体加粗
-                        doc.paragraphs[paragraphcnt - 1].add_run(
-                            sentence_not_to_bold
-                        ).bold = False
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            1
-                        ].font.name = "Times New Roman"
-                        doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
-                            Pt(16)
-                        )  # 字体大小3号
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            1
-                        ].element.rPr.rFonts.set(
-                            qn("w:eastAsia"), "方正仿宋_GBK"
-                        )
-                        delete_paragraph(paragraph)
                 elif GradeFourTitle(
                     run.text
                 ):  # 判断是否为四级标题格式（如：（1）xxx）
-                    if "。" not in run.text:
-                        run.font.name = "Times New Roman"
-                        run.element.rPr.rFonts.set(
+                    run.font.name = "Times New Roman"
+                    run.element.rPr.rFonts.set(
                             qn("w:eastAsia"), "方正仿宋_GBK"
-                        )
-                        run.bold = True  # 字体加粗
-                    else:
-                        sentence_to_bold = run.text.split("。")[0] + "。"
-                        sentence_not_to_bold = run.text.split("。", 1)[1]
-                        paragraph.insert_paragraph_before(sentence_to_bold)
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.first_line_indent = Pt(32)
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.line_spacing = Pt(
-                            29
-                        )  # 行距固定值29磅
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.space_after = Pt(
-                            0
-                        )  # 段后间距=0
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].font.name = "Times New Roman"
-                        doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
-                            Pt(16)
-                        )  # 字体大小3号
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].element.rPr.rFonts.set(
-                            qn("w:eastAsia"), "方正仿宋_GBK"
-                        )
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].bold = True  # 字体加粗
-                        doc.paragraphs[paragraphcnt - 1].add_run(
-                            sentence_not_to_bold
-                        ).bold = False
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            1
-                        ].font.name = "Times New Roman"
-                        doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
-                            Pt(16)
-                        )  # 字体大小3号
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            1
-                        ].element.rPr.rFonts.set(
-                            qn("w:eastAsia"), "方正仿宋_GBK"
-                        )
-                        delete_paragraph(paragraph)
-                elif GradeFiveTitle(
-                    run.text
-                ):  # 判断是否为五级标题格式（如：一是xxx）
-                    if "。" not in run.text:
-                        run.font.name = "Times New Roman"
-                        run.element.rPr.rFonts.set(
-                            qn("w:eastAsia"), "方正仿宋_GBK"
-                        )
-                        run.bold = True  # 字体加粗
-                    else:
-                        sentence_to_bold = run.text.split("。")[0] + "。"
-                        sentence_not_to_bold = run.text.split("。", 1)[1]
-                        paragraph.insert_paragraph_before(sentence_to_bold)
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.first_line_indent = Pt(32)
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.line_spacing = Pt(
-                            29
-                        )  # 行距固定值29磅
-                        doc.paragraphs[
-                            paragraphcnt - 1
-                        ].paragraph_format.space_after = Pt(
-                            0
-                        )  # 段后间距=0
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].font.name = "Times New Roman"
-                        doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
-                            Pt(16)
-                        )  # 字体大小3号
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].element.rPr.rFonts.set(
-                            qn("w:eastAsia"), "方正仿宋_GBK"
-                        )
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            0
-                        ].bold = True  # 字体加粗
-                        doc.paragraphs[paragraphcnt - 1].add_run(
-                            sentence_not_to_bold
-                        ).bold = False
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            1
-                        ].font.name = "Times New Roman"
-                        doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
-                            Pt(16)
-                        )  # 字体大小3号
-                        doc.paragraphs[paragraphcnt - 1].runs[
-                            1
-                        ].element.rPr.rFonts.set(
-                            qn("w:eastAsia"), "方正仿宋_GBK"
-                        )
-                        delete_paragraph(paragraph)
+                    )
+                #     if "。" not in run.text:
+                #         run.font.name = "Times New Roman"
+                #         run.element.rPr.rFonts.set(
+                #             qn("w:eastAsia"), "方正仿宋_GBK"
+                #         )
+                #         run.bold = True  # 字体加粗
+                #     else:
+                #         sentence_to_bold = run.text.split("。")[0] + "。"
+                #         sentence_not_to_bold = run.text.split("。", 1)[1]
+                #         paragraph.insert_paragraph_before(sentence_to_bold)
+                #         doc.paragraphs[
+                #             paragraphcnt - 1
+                #         ].paragraph_format.first_line_indent = Pt(32)
+                #         doc.paragraphs[
+                #             paragraphcnt - 1
+                #         ].paragraph_format.line_spacing = Pt(
+                #             29
+                #         )  # 行距固定值29磅
+                #         doc.paragraphs[
+                #             paragraphcnt - 1
+                #         ].paragraph_format.space_after = Pt(
+                #             0
+                #         )  # 段后间距=0
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             0
+                #         ].font.name = "Times New Roman"
+                #         doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
+                #             Pt(16)
+                #         )  # 字体大小3号
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             0
+                #         ].element.rPr.rFonts.set(
+                #             qn("w:eastAsia"), "方正仿宋_GBK"
+                #         )
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             0
+                #         ].bold = True  # 字体加粗
+                #         doc.paragraphs[paragraphcnt - 1].add_run(
+                #             sentence_not_to_bold
+                #         ).bold = False
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             1
+                #         ].font.name = "Times New Roman"
+                #         doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
+                #             Pt(16)
+                #         )  # 字体大小3号
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             1
+                #         ].element.rPr.rFonts.set(
+                #             qn("w:eastAsia"), "方正仿宋_GBK"
+                #         )
+                #         delete_paragraph(paragraph)
+                # elif GradeFiveTitle(
+                #     run.text
+                # ):  # 判断是否为五级标题格式（如：一是xxx）
+                #     if "。" not in run.text:
+                #         run.font.name = "Times New Roman"
+                #         run.element.rPr.rFonts.set(
+                #             qn("w:eastAsia"), "方正仿宋_GBK"
+                #         )
+                #         run.bold = True  # 字体加粗
+                #     else:
+                #         sentence_to_bold = run.text.split("。")[0] + "。"
+                #         sentence_not_to_bold = run.text.split("。", 1)[1]
+                #         paragraph.insert_paragraph_before(sentence_to_bold)
+                #         doc.paragraphs[
+                #             paragraphcnt - 1
+                #         ].paragraph_format.first_line_indent = Pt(32)
+                #         doc.paragraphs[
+                #             paragraphcnt - 1
+                #         ].paragraph_format.line_spacing = Pt(
+                #             29
+                #         )  # 行距固定值29磅
+                #         doc.paragraphs[
+                #             paragraphcnt - 1
+                #         ].paragraph_format.space_after = Pt(
+                #             0
+                #         )  # 段后间距=0
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             0
+                #         ].font.name = "Times New Roman"
+                #         doc.paragraphs[paragraphcnt - 1].runs[0].font.size = (
+                #             Pt(16)
+                #         )  # 字体大小3号
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             0
+                #         ].element.rPr.rFonts.set(
+                #             qn("w:eastAsia"), "方正仿宋_GBK"
+                #         )
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             0
+                #         ].bold = True  # 字体加粗
+                #         doc.paragraphs[paragraphcnt - 1].add_run(
+                #             sentence_not_to_bold
+                #         ).bold = False
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             1
+                #         ].font.name = "Times New Roman"
+                #         doc.paragraphs[paragraphcnt - 1].runs[1].font.size = (
+                #             Pt(16)
+                #         )  # 字体大小3号
+                #         doc.paragraphs[paragraphcnt - 1].runs[
+                #             1
+                #         ].element.rPr.rFonts.set(
+                #             qn("w:eastAsia"), "方正仿宋_GBK"
+                #         )
+                #         delete_paragraph(paragraph)
                 elif LuoKuan(run.text):  # 判断是否为落款格式
                     run.font.name = "Times New Roman"
                     run.element.rPr.rFonts.set(qn("w:eastAsia"), "方正仿宋_GBK")
